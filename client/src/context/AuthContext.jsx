@@ -12,7 +12,16 @@ export const AuthProvider = ({ children }) => {
       return null;
     }
   });
-  const [profile, setProfile] = useState(null);
+
+  const [profile, setProfile] = useState(() => {
+    try {
+      const saved = localStorage.getItem('sheback_profile');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const [token, setToken] = useState(localStorage.getItem('sheback_token') || '');
   const [loading, setLoading] = useState(true);
 
@@ -32,11 +41,17 @@ export const AuthProvider = ({ children }) => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         try {
           const res = await axios.get('/api/profile');
-          if (res.data.success) {
+          if (res.data.success && res.data.profile) {
             setProfile(res.data.profile);
+            try {
+              localStorage.setItem('sheback_profile', JSON.stringify(res.data.profile));
+            } catch (e) {
+              console.warn('Failed to cache profile in localStorage', e);
+            }
+
             const syncedUser = res.data.user || {
-              id: res.data.profile.user,
-              name: res.data.profile.name,
+              id: res.data.profile.userId || res.data.profile.user || user?.id,
+              name: res.data.profile.name || user?.name,
               email: user?.email || '',
               onboarded: true,
             };
@@ -74,6 +89,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('sheback_token');
     localStorage.removeItem('sheback_user');
+    localStorage.removeItem('sheback_profile');
     setToken('');
     setUser(null);
     setProfile(null);
@@ -81,11 +97,22 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateProfileData = (newProfile) => {
-    setProfile(newProfile);
+    if (!newProfile) return;
+
+    setProfile((prevProfile) => {
+      const merged = { ...(prevProfile || {}), ...newProfile };
+      try {
+        localStorage.setItem('sheback_profile', JSON.stringify(merged));
+      } catch (e) {
+        console.warn('Error persisting profile to localStorage', e);
+      }
+      return merged;
+    });
+
     setUser((prev) => {
       const updated = {
         ...(prev || {}),
-        id: newProfile.user || prev?.id,
+        id: newProfile.userId || newProfile.user || prev?.id,
         name: newProfile.name || prev?.name,
         email: prev?.email || '',
         onboarded: true,

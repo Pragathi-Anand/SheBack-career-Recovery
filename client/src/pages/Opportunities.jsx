@@ -193,7 +193,7 @@ const Opportunities = () => {
                 <h3 className="text-base font-bold text-white group-hover:text-indigo-300 transition line-clamp-2">
                   {opp.title}
                 </h3>
-                <p className="text-xs text-slate-300 font-medium mt-1">{opp.company}</p>
+                <p className="text-xs text-slate-300 font-medium mt-1">{opp.organization || opp.company}</p>
 
                 {/* Location & Work Type */}
                 <div className="flex items-center gap-3 text-[11px] text-slate-400 mt-2">
@@ -210,9 +210,9 @@ const Opportunities = () => {
                 </p>
 
                 {/* Required Skills Tags */}
-                {opp.requiredSkills && opp.requiredSkills.length > 0 && (
+                {(opp.skills || opp.requiredSkills) && (opp.skills || opp.requiredSkills).length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-4">
-                    {opp.requiredSkills.map((sk, idx) => (
+                    {(opp.skills || opp.requiredSkills).map((sk, idx) => (
                       <span
                         key={idx}
                         className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-900 text-slate-300 border border-slate-800"

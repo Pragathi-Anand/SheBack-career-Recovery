@@ -144,11 +144,23 @@ const Onboarding = () => {
       // 1. Update Profile
       const profileRes = await axios.put('/api/profile', formData);
       if (profileRes.data.success) {
-        updateProfileData(profileRes.data.profile);
+        let updatedProfile = profileRes.data.profile;
+        updateProfileData(updatedProfile);
 
         // 2. Trigger Gemini AI Analysis
         setAnalyzing(true);
-        await axios.post('/api/analysis');
+        try {
+          const analysisRes = await axios.post('/api/analysis');
+          if (analysisRes.data.success && analysisRes.data.analysis) {
+            updatedProfile = {
+              ...updatedProfile,
+              careerAnalysis: analysisRes.data.analysis,
+            };
+            updateProfileData(updatedProfile);
+          }
+        } catch (analysisErr) {
+          console.warn('AI analysis trigger note:', analysisErr.message);
+        }
 
         // 3. Navigate to Analysis Page
         navigate('/analysis');

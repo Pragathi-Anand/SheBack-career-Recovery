@@ -1,0 +1,915 @@
+{
+  "users": [
+    {
+      "_id": "demo_user_sheback_2026",
+      "id": "demo_user_sheback_2026",
+      "name": "Priya Sharma",
+      "email": "demo@sheback.com",
+      "password": "$2a$10$zVP1pTr7onEqHAFeNwu1T.gmBVUpXIQFLk1ypHiigiE5/xJVOI1Au",
+      "onboarded": true,
+      "createdAt": "2026-09-28T19:42:45.112Z"
+    },
+    {
+      "_id": "6abac35ced77f6f1835aafa8",
+      "id": "6abac35ced77f6f1835aafa8",
+      "name": "Ananya Deshmukh",
+      "email": "test_returnee_1790624604905@sheback.com",
+      "password": "$2a$10$KBomiqErv0t7CuJoHZsuo.5kwDmfK6MHiWj6wsx1QrkRJtnBlwzKy",
+      "onboarded": true,
+      "createdAt": "2026-09-28T19:43:24.965Z"
+    },
+    {
+      "_id": "6abac37ea3253376a088ff8d",
+      "id": "6abac37ea3253376a088ff8d",
+      "name": "Meera Nair",
+      "email": "meera@example.com",
+      "password": "$2a$10$SzHQM5eA9JbvlIijWn4lF.DtJ7v4WKWVpwQPYHEZ871ykJMwDtLDW",
+      "onboarded": false,
+      "createdAt": "2026-09-28T19:43:58.591Z"
+    }
+  ],
+  "profiles": [
+    {
+      "_id": "prof_demo_user_sheback_2026",
+      "userId": "demo_user_sheback_2026",
+      "user": "demo_user_sheback_2026",
+      "name": "Priya Sharma",
+      "previousRole": "Associate Project Manager",
+      "education": "B.A. Business Administration",
+      "experience": 4,
+      "yearsOfExperience": 4,
+      "industry": "Corporate Services & Marketing",
+      "previousIndustry": "Corporate Services & Marketing",
+      "careerBreak": "3 years (Family Caregiving)",
+      "breakDuration": "3 years (Family Caregiving)",
+      "skills": [
+        "Project Planning",
+        "Agile/Scrum",
+        "Communication",
+        "Jira",
+        "Budgeting"
+      ],
+      "previousSkills": [
+        "Project Planning",
+        "Agile/Scrum",
+        "Communication",
+        "Jira",
+        "Budgeting"
+      ],
+      "interests": [
+        "Product Strategy",
+        "Tech Returnships",
+        "User Experience"
+      ],
+      "workType": "Hybrid",
+      "preferredWorkType": "Hybrid",
+      "location": "Remote / Major City",
+      "preferredLocation": "Remote / Major City",
+      "desiredCareer": "Product Manager",
+      "careerAnalysis": {
+        "transferableSkills": [
+          {
+            "skill": "Project Planning",
+            "relevance": "Directly applies to responsibilities in Product Manager.",
+            "category": "Management"
+          },
+          {
+            "skill": "Agile/Scrum",
+            "relevance": "Crucial for modern agile teams and remote setups.",
+            "category": "Soft Skill"
+          },
+          {
+            "skill": "Communication",
+            "relevance": "Helps in decision making and workflow execution.",
+            "category": "Tech Skill"
+          },
+          {
+            "skill": "Adaptability & Resilience",
+            "relevance": "Reflects maturity and navigating professional transition after career hiatus.",
+            "category": "Soft Skill"
+          }
+        ],
+        "existingStrengths": [
+          "4+ years of industry foundation in Corporate Services & Marketing",
+          "Solid groundwork in Project Planning & Agile/Scrum",
+          "Strong commitment to re-skilling into Product Manager",
+          "Proven experience with business workflows and communication"
+        ],
+        "skillGaps": [
+          {
+            "skill": "Modern Product Manager Tools & Frameworks",
+            "priority": "High",
+            "recommendedAction": "Complete a 4-week certified refresher course"
+          },
+          {
+            "skill": "AI-Assisted Workplace Productivity (Gemini, Copilot)",
+            "priority": "Medium",
+            "recommendedAction": "Practice prompt engineering and workflow automation"
+          },
+          {
+            "skill": "Recent Industry Case Studies & Portfolio",
+            "priority": "High",
+            "recommendedAction": "Build 2 hands-on capstone projects tailored for returnships"
+          },
+          {
+            "skill": "Personal Brand & Profile Optimization",
+            "priority": "Medium",
+            "recommendedAction": "Update bio highlighting career hiatus strengths & certifications"
+          }
+        ],
+        "recommendedCareerPaths": [
+          {
+            "roleTitle": "Product Manager",
+            "matchPercentage": 92,
+            "rationale": "Your experience as a Associate Project Manager paired with intentional re-skilling provides a competitive edge for Product Manager.",
+            "expectedSalaryRange": "₹8 - ₹16 LPA / $75k - $110k",
+            "growthPotential": "High"
+          },
+          {
+            "roleTitle": "Associate Product Manager",
+            "matchPercentage": 88,
+            "rationale": "An accelerated entry path allowing on-the-job refresher training and quick career progression.",
+            "expectedSalaryRange": "₹6 - ₹12 LPA / $65k - $90k",
+            "growthPotential": "High"
+          },
+          {
+            "roleTitle": "Returnship Specialist",
+            "matchPercentage": 85,
+            "rationale": "Direct placement in returnee-focused fellowship programs with dedicated mentorship.",
+            "expectedSalaryRange": "Competitive Stipend to Full-time",
+            "growthPotential": "High"
+          }
+        ],
+        "recommendedCourses": [
+          {
+            "title": "Product Manager Modern Refresher",
+            "platform": "SheBack Academy",
+            "duration": "6 Weeks",
+            "focusArea": "Core competencies & tools",
+            "difficulty": "Intermediate"
+          },
+          {
+            "title": "Generative AI & Data Analytics for Professionals",
+            "platform": "Coursera / Google",
+            "duration": "4 Weeks",
+            "focusArea": "AI-driven workflow modernization",
+            "difficulty": "Beginner"
+          }
+        ],
+        "recommendedInternships": [
+          {
+            "title": "Product Manager Returnship Fellow",
+            "company": "TechReturn Partners",
+            "workType": "Hybrid",
+            "stipend": "Paid Returnship",
+            "description": "Structured 16-week re-entry program with senior mentorship and conversion opportunities."
+          }
+        ],
+        "recommendedJobs": [
+          {
+            "title": "Product Manager",
+            "company": "Flexible Innovations",
+            "workType": "Hybrid",
+            "salary": "Competitive",
+            "reason": "Explicit returner-friendly hiring policy with flexible schedules."
+          }
+        ],
+        "personalizedRoadmap": [
+          {
+            "phaseNumber": 1,
+            "title": "Phase 1: Foundation & Skill Refresh",
+            "duration": "Weeks 1-4",
+            "description": "Rebuild core skills and align with current industry standards.",
+            "milestones": [
+              {
+                "title": "Complete AI-assisted skills audit",
+                "type": "skill",
+                "link": "/analysis"
+              },
+              {
+                "title": "Enroll in 1 domain refresher bridge course",
+                "type": "course",
+                "link": "/opportunities"
+              },
+              {
+                "title": "Position career break affirmatively on resume & LinkedIn",
+                "type": "networking",
+                "link": "/profile"
+              }
+            ]
+          },
+          {
+            "phaseNumber": 2,
+            "title": "Phase 2: Project Portfolio & Hands-on Practice",
+            "duration": "Weeks 5-8",
+            "description": "Build modern proof-of-work to showcase recent capabilities.",
+            "milestones": [
+              {
+                "title": "Build 1 practical portfolio project using modern tools",
+                "type": "project",
+                "link": "#"
+              },
+              {
+                "title": "Attend SheBack returnee peer mentoring session",
+                "type": "networking",
+                "link": "#"
+              }
+            ]
+          },
+          {
+            "phaseNumber": 3,
+            "title": "Phase 3: Applications & Returnships",
+            "duration": "Weeks 9-12",
+            "description": "Begin targeted applications for returnships and remote roles.",
+            "milestones": [
+              {
+                "title": "Apply to 3 verified return-to-work programs",
+                "type": "application",
+                "link": "/opportunities"
+              },
+              {
+                "title": "Complete mock interview with returnee alumni",
+                "type": "networking",
+                "link": "#"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "_id": "prof_6abac35ced77f6f1835aafa8",
+      "userId": "6abac35ced77f6f1835aafa8",
+      "user": "6abac35ced77f6f1835aafa8",
+      "name": "Ananya Deshmukh",
+      "previousRole": "Frontend Developer",
+      "education": "B.Tech in Computer Science",
+      "experience": 4,
+      "yearsOfExperience": 4,
+      "industry": "Financial Technology",
+      "previousIndustry": "Financial Technology",
+      "careerBreak": "3 years (Maternity & Childcare)",
+      "breakDuration": "3 years (Maternity & Childcare)",
+      "skills": [
+        "JavaScript",
+        "React",
+        "CSS",
+        "Git",
+        "Agile"
+      ],
+      "previousSkills": [
+        "JavaScript",
+        "React",
+        "CSS",
+        "Git",
+        "Agile"
+      ],
+      "interests": [
+        "Full-Stack Development",
+        "AI Tools",
+        "Cloud"
+      ],
+      "workType": "Remote",
+      "preferredWorkType": "Remote",
+      "location": "Bengaluru / Remote",
+      "preferredLocation": "Bengaluru / Remote",
+      "desiredCareer": "Senior React Developer",
+      "updatedAt": "2026-09-28T19:43:24.971Z"
+    },
+    {
+      "_id": "prof_mem_1790619432336",
+      "userId": "mem_1790619432336",
+      "user": "mem_1790619432336",
+      "name": "pragathi",
+      "previousRole": "software developer ",
+      "education": "b tech electrical engineering",
+      "experience": "3",
+      "yearsOfExperience": "3",
+      "industry": "software",
+      "previousIndustry": "software",
+      "careerBreak": "2",
+      "breakDuration": "2",
+      "skills": [
+        "java",
+        "excel",
+        "communication",
+        "problem solving"
+      ],
+      "previousSkills": [
+        "java",
+        "excel",
+        "communication",
+        "problem solving"
+      ],
+      "interests": [
+        "python",
+        "excel",
+        "database"
+      ],
+      "workType": "Remote",
+      "preferredWorkType": "Remote",
+      "location": "Flexible",
+      "preferredLocation": "Flexible",
+      "desiredCareer": "data analyst ",
+      "updatedAt": "2026-09-28T19:58:26.554Z",
+      "careerAnalysis": {
+        "transferableSkills": [
+          {
+            "skill": "java",
+            "relevance": "Directly applies to responsibilities in data analyst .",
+            "category": "Management"
+          },
+          {
+            "skill": "excel",
+            "relevance": "Crucial for modern agile teams and remote setups.",
+            "category": "Soft Skill"
+          },
+          {
+            "skill": "communication",
+            "relevance": "Helps in decision making and workflow execution.",
+            "category": "Tech Skill"
+          },
+          {
+            "skill": "Adaptability & Resilience",
+            "relevance": "Reflects maturity and navigating professional transition after career hiatus.",
+            "category": "Soft Skill"
+          }
+        ],
+        "existingStrengths": [
+          "3+ years of industry foundation in software",
+          "Solid groundwork in java & excel",
+          "Strong commitment to re-skilling into data analyst ",
+          "Proven experience with business workflows and communication"
+        ],
+        "skillGaps": [
+          {
+            "skill": "Modern data analyst  Tools & Frameworks",
+            "priority": "High",
+            "recommendedAction": "Complete a 4-week certified refresher course"
+          },
+          {
+            "skill": "AI-Assisted Workplace Productivity (Gemini, Copilot)",
+            "priority": "Medium",
+            "recommendedAction": "Practice prompt engineering and workflow automation"
+          },
+          {
+            "skill": "Recent Industry Case Studies & Portfolio",
+            "priority": "High",
+            "recommendedAction": "Build 2 hands-on capstone projects tailored for returnships"
+          },
+          {
+            "skill": "Personal Brand & Profile Optimization",
+            "priority": "Medium",
+            "recommendedAction": "Update bio highlighting career hiatus strengths & certifications"
+          }
+        ],
+        "recommendedCareerPaths": [
+          {
+            "roleTitle": "data analyst ",
+            "matchPercentage": 92,
+            "rationale": "Your experience as a software developer  paired with intentional re-skilling provides a competitive edge for data analyst .",
+            "expectedSalaryRange": "₹8 - ₹16 LPA / $75k - $110k",
+            "growthPotential": "High"
+          },
+          {
+            "roleTitle": "Associate data analyst ",
+            "matchPercentage": 88,
+            "rationale": "An accelerated entry path allowing on-the-job refresher training and quick career progression.",
+            "expectedSalaryRange": "₹6 - ₹12 LPA / $65k - $90k",
+            "growthPotential": "High"
+          },
+          {
+            "roleTitle": "Returnship Specialist",
+            "matchPercentage": 85,
+            "rationale": "Direct placement in returnee-focused fellowship programs with dedicated mentorship.",
+            "expectedSalaryRange": "Competitive Stipend to Full-time",
+            "growthPotential": "High"
+          }
+        ],
+        "recommendedCourses": [
+          {
+            "title": "data analyst  Modern Refresher",
+            "platform": "SheBack Academy",
+            "duration": "6 Weeks",
+            "focusArea": "Core competencies & tools",
+            "difficulty": "Intermediate"
+          },
+          {
+            "title": "Generative AI & Data Analytics for Professionals",
+            "platform": "Coursera / Google",
+            "duration": "4 Weeks",
+            "focusArea": "AI-driven workflow modernization",
+            "difficulty": "Beginner"
+          }
+        ],
+        "recommendedInternships": [
+          {
+            "title": "data analyst  Returnship Fellow",
+            "company": "TechReturn Partners",
+            "workType": "Remote",
+            "stipend": "Paid Returnship",
+            "description": "Structured 16-week re-entry program with senior mentorship and conversion opportunities."
+          }
+        ],
+        "recommendedJobs": [
+          {
+            "title": "data analyst ",
+            "company": "Flexible Innovations",
+            "workType": "Remote",
+            "salary": "Competitive",
+            "reason": "Explicit returner-friendly hiring policy with flexible schedules."
+          }
+        ],
+        "personalizedRoadmap": [
+          {
+            "phaseNumber": 1,
+            "title": "Phase 1: Foundation & Skill Refresh",
+            "duration": "Weeks 1-4",
+            "description": "Rebuild core skills and align with current industry standards.",
+            "milestones": [
+              {
+                "title": "Complete AI-assisted skills audit",
+                "type": "skill",
+                "link": "/analysis"
+              },
+              {
+                "title": "Enroll in 1 domain refresher bridge course",
+                "type": "course",
+                "link": "/opportunities"
+              },
+              {
+                "title": "Position career break affirmatively on resume & LinkedIn",
+                "type": "networking",
+                "link": "/profile"
+              }
+            ]
+          },
+          {
+            "phaseNumber": 2,
+            "title": "Phase 2: Project Portfolio & Hands-on Practice",
+            "duration": "Weeks 5-8",
+            "description": "Build modern proof-of-work to showcase recent capabilities.",
+            "milestones": [
+              {
+                "title": "Build 1 practical portfolio project using modern tools",
+                "type": "project",
+                "link": "#"
+              },
+              {
+                "title": "Attend SheBack returnee peer mentoring session",
+                "type": "networking",
+                "link": "#"
+              }
+            ]
+          },
+          {
+            "phaseNumber": 3,
+            "title": "Phase 3: Applications & Returnships",
+            "duration": "Weeks 9-12",
+            "description": "Begin targeted applications for returnships and remote roles.",
+            "milestones": [
+              {
+                "title": "Apply to 3 verified return-to-work programs",
+                "type": "application",
+                "link": "/opportunities"
+              },
+              {
+                "title": "Complete mock interview with returnee alumni",
+                "type": "networking",
+                "link": "#"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "careerAnalyses": [
+    {
+      "userId": "mem_1790619432336",
+      "transferableSkills": [
+        {
+          "skill": "java",
+          "relevance": "Directly applies to responsibilities in data analyst .",
+          "category": "Management"
+        },
+        {
+          "skill": "excel",
+          "relevance": "Crucial for modern agile teams and remote setups.",
+          "category": "Soft Skill"
+        },
+        {
+          "skill": "communication",
+          "relevance": "Helps in decision making and workflow execution.",
+          "category": "Tech Skill"
+        },
+        {
+          "skill": "Adaptability & Resilience",
+          "relevance": "Reflects maturity and navigating professional transition after career hiatus.",
+          "category": "Soft Skill"
+        }
+      ],
+      "strengths": [
+        "3+ years of industry foundation in software",
+        "Solid groundwork in java & excel",
+        "Strong commitment to re-skilling into data analyst ",
+        "Proven experience with business workflows and communication"
+      ],
+      "skillGaps": [
+        {
+          "skill": "Modern data analyst  Tools & Frameworks",
+          "priority": "High",
+          "recommendedAction": "Complete a 4-week certified refresher course"
+        },
+        {
+          "skill": "AI-Assisted Workplace Productivity (Gemini, Copilot)",
+          "priority": "Medium",
+          "recommendedAction": "Practice prompt engineering and workflow automation"
+        },
+        {
+          "skill": "Recent Industry Case Studies & Portfolio",
+          "priority": "High",
+          "recommendedAction": "Build 2 hands-on capstone projects tailored for returnships"
+        },
+        {
+          "skill": "Personal Brand & Profile Optimization",
+          "priority": "Medium",
+          "recommendedAction": "Update bio highlighting career hiatus strengths & certifications"
+        }
+      ],
+      "careerPaths": [
+        {
+          "roleTitle": "data analyst ",
+          "matchPercentage": 92,
+          "rationale": "Your experience as a software developer  paired with intentional re-skilling provides a competitive edge for data analyst .",
+          "expectedSalaryRange": "₹8 - ₹16 LPA / $75k - $110k",
+          "growthPotential": "High"
+        },
+        {
+          "roleTitle": "Associate data analyst ",
+          "matchPercentage": 88,
+          "rationale": "An accelerated entry path allowing on-the-job refresher training and quick career progression.",
+          "expectedSalaryRange": "₹6 - ₹12 LPA / $65k - $90k",
+          "growthPotential": "High"
+        },
+        {
+          "roleTitle": "Returnship Specialist",
+          "matchPercentage": 85,
+          "rationale": "Direct placement in returnee-focused fellowship programs with dedicated mentorship.",
+          "expectedSalaryRange": "Competitive Stipend to Full-time",
+          "growthPotential": "High"
+        }
+      ],
+      "learningAreas": [
+        {
+          "title": "data analyst  Modern Refresher",
+          "platform": "SheBack Academy",
+          "duration": "6 Weeks",
+          "focusArea": "Core competencies & tools",
+          "difficulty": "Intermediate"
+        },
+        {
+          "title": "Generative AI & Data Analytics for Professionals",
+          "platform": "Coursera / Google",
+          "duration": "4 Weeks",
+          "focusArea": "AI-driven workflow modernization",
+          "difficulty": "Beginner"
+        }
+      ],
+      "generatedAt": "2026-09-28T19:58:26.842Z",
+      "rawAnalysis": {
+        "transferableSkills": [
+          {
+            "skill": "java",
+            "relevance": "Directly applies to responsibilities in data analyst .",
+            "category": "Management"
+          },
+          {
+            "skill": "excel",
+            "relevance": "Crucial for modern agile teams and remote setups.",
+            "category": "Soft Skill"
+          },
+          {
+            "skill": "communication",
+            "relevance": "Helps in decision making and workflow execution.",
+            "category": "Tech Skill"
+          },
+          {
+            "skill": "Adaptability & Resilience",
+            "relevance": "Reflects maturity and navigating professional transition after career hiatus.",
+            "category": "Soft Skill"
+          }
+        ],
+        "existingStrengths": [
+          "3+ years of industry foundation in software",
+          "Solid groundwork in java & excel",
+          "Strong commitment to re-skilling into data analyst ",
+          "Proven experience with business workflows and communication"
+        ],
+        "skillGaps": [
+          {
+            "skill": "Modern data analyst  Tools & Frameworks",
+            "priority": "High",
+            "recommendedAction": "Complete a 4-week certified refresher course"
+          },
+          {
+            "skill": "AI-Assisted Workplace Productivity (Gemini, Copilot)",
+            "priority": "Medium",
+            "recommendedAction": "Practice prompt engineering and workflow automation"
+          },
+          {
+            "skill": "Recent Industry Case Studies & Portfolio",
+            "priority": "High",
+            "recommendedAction": "Build 2 hands-on capstone projects tailored for returnships"
+          },
+          {
+            "skill": "Personal Brand & Profile Optimization",
+            "priority": "Medium",
+            "recommendedAction": "Update bio highlighting career hiatus strengths & certifications"
+          }
+        ],
+        "recommendedCareerPaths": [
+          {
+            "roleTitle": "data analyst ",
+            "matchPercentage": 92,
+            "rationale": "Your experience as a software developer  paired with intentional re-skilling provides a competitive edge for data analyst .",
+            "expectedSalaryRange": "₹8 - ₹16 LPA / $75k - $110k",
+            "growthPotential": "High"
+          },
+          {
+            "roleTitle": "Associate data analyst ",
+            "matchPercentage": 88,
+            "rationale": "An accelerated entry path allowing on-the-job refresher training and quick career progression.",
+            "expectedSalaryRange": "₹6 - ₹12 LPA / $65k - $90k",
+            "growthPotential": "High"
+          },
+          {
+            "roleTitle": "Returnship Specialist",
+            "matchPercentage": 85,
+            "rationale": "Direct placement in returnee-focused fellowship programs with dedicated mentorship.",
+            "expectedSalaryRange": "Competitive Stipend to Full-time",
+            "growthPotential": "High"
+          }
+        ],
+        "recommendedCourses": [
+          {
+            "title": "data analyst  Modern Refresher",
+            "platform": "SheBack Academy",
+            "duration": "6 Weeks",
+            "focusArea": "Core competencies & tools",
+            "difficulty": "Intermediate"
+          },
+          {
+            "title": "Generative AI & Data Analytics for Professionals",
+            "platform": "Coursera / Google",
+            "duration": "4 Weeks",
+            "focusArea": "AI-driven workflow modernization",
+            "difficulty": "Beginner"
+          }
+        ],
+        "recommendedInternships": [
+          {
+            "title": "data analyst  Returnship Fellow",
+            "company": "TechReturn Partners",
+            "workType": "Remote",
+            "stipend": "Paid Returnship",
+            "description": "Structured 16-week re-entry program with senior mentorship and conversion opportunities."
+          }
+        ],
+        "recommendedJobs": [
+          {
+            "title": "data analyst ",
+            "company": "Flexible Innovations",
+            "workType": "Remote",
+            "salary": "Competitive",
+            "reason": "Explicit returner-friendly hiring policy with flexible schedules."
+          }
+        ],
+        "personalizedRoadmap": [
+          {
+            "phaseNumber": 1,
+            "title": "Phase 1: Foundation & Skill Refresh",
+            "duration": "Weeks 1-4",
+            "description": "Rebuild core skills and align with current industry standards.",
+            "milestones": [
+              {
+                "title": "Complete AI-assisted skills audit",
+                "type": "skill",
+                "link": "/analysis"
+              },
+              {
+                "title": "Enroll in 1 domain refresher bridge course",
+                "type": "course",
+                "link": "/opportunities"
+              },
+              {
+                "title": "Position career break affirmatively on resume & LinkedIn",
+                "type": "networking",
+                "link": "/profile"
+              }
+            ]
+          },
+          {
+            "phaseNumber": 2,
+            "title": "Phase 2: Project Portfolio & Hands-on Practice",
+            "duration": "Weeks 5-8",
+            "description": "Build modern proof-of-work to showcase recent capabilities.",
+            "milestones": [
+              {
+                "title": "Build 1 practical portfolio project using modern tools",
+                "type": "project",
+                "link": "#"
+              },
+              {
+                "title": "Attend SheBack returnee peer mentoring session",
+                "type": "networking",
+                "link": "#"
+              }
+            ]
+          },
+          {
+            "phaseNumber": 3,
+            "title": "Phase 3: Applications & Returnships",
+            "duration": "Weeks 9-12",
+            "description": "Begin targeted applications for returnships and remote roles.",
+            "milestones": [
+              {
+                "title": "Apply to 3 verified return-to-work programs",
+                "type": "application",
+                "link": "/opportunities"
+              },
+              {
+                "title": "Complete mock interview with returnee alumni",
+                "type": "networking",
+                "link": "#"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "roadmaps": [
+    {
+      "_id": "rm_mem_1790619432336",
+      "userId": "mem_1790619432336",
+      "user": "mem_1790619432336",
+      "targetRole": "data analyst ",
+      "progress": 15,
+      "overallProgress": 15,
+      "weeks": [
+        {
+          "phaseNumber": 1,
+          "title": "Phase 1: Foundation & Skill Refresh",
+          "duration": "Weeks 1-4",
+          "description": "Rebuild core skills and align with current industry standards.",
+          "milestones": [
+            {
+              "title": "Complete AI-assisted skills audit",
+              "description": "Focus area for Phase 1: Foundation & Skill Refresh",
+              "completed": false,
+              "type": "skill",
+              "resourceLink": "/analysis"
+            },
+            {
+              "title": "Enroll in 1 domain refresher bridge course",
+              "description": "Focus area for Phase 1: Foundation & Skill Refresh",
+              "completed": false,
+              "type": "course",
+              "resourceLink": "/opportunities"
+            },
+            {
+              "title": "Position career break affirmatively on resume & LinkedIn",
+              "description": "Focus area for Phase 1: Foundation & Skill Refresh",
+              "completed": false,
+              "type": "networking",
+              "resourceLink": "/profile"
+            }
+          ]
+        },
+        {
+          "phaseNumber": 2,
+          "title": "Phase 2: Project Portfolio & Hands-on Practice",
+          "duration": "Weeks 5-8",
+          "description": "Build modern proof-of-work to showcase recent capabilities.",
+          "milestones": [
+            {
+              "title": "Build 1 practical portfolio project using modern tools",
+              "description": "Focus area for Phase 2: Project Portfolio & Hands-on Practice",
+              "completed": false,
+              "type": "project",
+              "resourceLink": "#"
+            },
+            {
+              "title": "Attend SheBack returnee peer mentoring session",
+              "description": "Focus area for Phase 2: Project Portfolio & Hands-on Practice",
+              "completed": false,
+              "type": "networking",
+              "resourceLink": "#"
+            }
+          ]
+        },
+        {
+          "phaseNumber": 3,
+          "title": "Phase 3: Applications & Returnships",
+          "duration": "Weeks 9-12",
+          "description": "Begin targeted applications for returnships and remote roles.",
+          "milestones": [
+            {
+              "title": "Apply to 3 verified return-to-work programs",
+              "description": "Focus area for Phase 3: Applications & Returnships",
+              "completed": false,
+              "type": "application",
+              "resourceLink": "/opportunities"
+            },
+            {
+              "title": "Complete mock interview with returnee alumni",
+              "description": "Focus area for Phase 3: Applications & Returnships",
+              "completed": false,
+              "type": "networking",
+              "resourceLink": "#"
+            }
+          ]
+        }
+      ],
+      "phases": [
+        {
+          "phaseNumber": 1,
+          "title": "Phase 1: Foundation & Skill Refresh",
+          "duration": "Weeks 1-4",
+          "description": "Rebuild core skills and align with current industry standards.",
+          "milestones": [
+            {
+              "title": "Complete AI-assisted skills audit",
+              "description": "Focus area for Phase 1: Foundation & Skill Refresh",
+              "completed": false,
+              "type": "skill",
+              "resourceLink": "/analysis"
+            },
+            {
+              "title": "Enroll in 1 domain refresher bridge course",
+              "description": "Focus area for Phase 1: Foundation & Skill Refresh",
+              "completed": false,
+              "type": "course",
+              "resourceLink": "/opportunities"
+            },
+            {
+              "title": "Position career break affirmatively on resume & LinkedIn",
+              "description": "Focus area for Phase 1: Foundation & Skill Refresh",
+              "completed": false,
+              "type": "networking",
+              "resourceLink": "/profile"
+            }
+          ]
+        },
+        {
+          "phaseNumber": 2,
+          "title": "Phase 2: Project Portfolio & Hands-on Practice",
+          "duration": "Weeks 5-8",
+          "description": "Build modern proof-of-work to showcase recent capabilities.",
+          "milestones": [
+            {
+              "title": "Build 1 practical portfolio project using modern tools",
+              "description": "Focus area for Phase 2: Project Portfolio & Hands-on Practice",
+              "completed": false,
+              "type": "project",
+              "resourceLink": "#"
+            },
+            {
+              "title": "Attend SheBack returnee peer mentoring session",
+              "description": "Focus area for Phase 2: Project Portfolio & Hands-on Practice",
+              "completed": false,
+              "type": "networking",
+              "resourceLink": "#"
+            }
+          ]
+        },
+        {
+          "phaseNumber": 3,
+          "title": "Phase 3: Applications & Returnships",
+          "duration": "Weeks 9-12",
+          "description": "Begin targeted applications for returnships and remote roles.",
+          "milestones": [
+            {
+              "title": "Apply to 3 verified return-to-work programs",
+              "description": "Focus area for Phase 3: Applications & Returnships",
+              "completed": false,
+              "type": "application",
+              "resourceLink": "/opportunities"
+            },
+            {
+              "title": "Complete mock interview with returnee alumni",
+              "description": "Focus area for Phase 3: Applications & Returnships",
+              "completed": false,
+              "type": "networking",
+              "resourceLink": "#"
+            }
+          ]
+        }
+      ],
+      "currentPhaseIndex": 0,
+      "updatedAt": "2026-09-28T19:58:26.845Z"
+    }
+  ],
+  "opportunities": []
+}

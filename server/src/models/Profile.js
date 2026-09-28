@@ -2,29 +2,79 @@ const mongoose = require('mongoose');
 
 const profileSchema = new mongoose.Schema(
   {
-    user: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
       unique: true,
+      alias: 'user',
     },
-    name: { type: String, required: true },
-    previousRole: { type: String, required: true },
-    education: { type: String, required: true },
-    yearsOfExperience: { type: Number, required: true },
-    previousIndustry: { type: String, required: true },
-    breakDuration: { type: String, required: true }, // e.g. "2 years", "6 months"
-    previousSkills: [{ type: String }],
-    interests: [{ type: String }],
-    preferredWorkType: { type: String, enum: ['Remote', 'Hybrid', 'On-site', 'Flexible', 'Part-time', 'Full-time'], default: 'Remote' },
-    preferredLocation: { type: String, default: 'Flexible' },
-    desiredCareer: { type: String, required: true },
+    name: {
+      type: String,
+      default: '',
+    },
+    previousRole: {
+      type: String,
+      default: '',
+    },
+    education: {
+      type: String,
+      default: '',
+    },
+    experience: {
+      type: mongoose.Schema.Types.Mixed,
+      default: 0,
+      alias: 'yearsOfExperience',
+    },
+    industry: {
+      type: String,
+      default: '',
+      alias: 'previousIndustry',
+    },
+    careerBreak: {
+      type: String,
+      default: '',
+      alias: 'breakDuration',
+    },
+    skills: [
+      {
+        type: String,
+      },
+    ],
+    interests: [
+      {
+        type: String,
+      },
+    ],
+    workType: {
+      type: String,
+      default: 'Remote',
+      alias: 'preferredWorkType',
+    },
+    location: {
+      type: String,
+      default: 'Flexible',
+      alias: 'preferredLocation',
+    },
+    desiredCareer: {
+      type: String,
+      default: '',
+    },
     careerAnalysis: {
       type: mongoose.Schema.Types.Mixed,
       default: null,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
+
+// Virtual alias for previousSkills
+profileSchema.virtual('previousSkills')
+  .get(function () { return this.skills; })
+  .set(function (val) { this.skills = val; });
 
 module.exports = mongoose.model('Profile', profileSchema);

@@ -1,15 +1,10 @@
+const mongoose = require('mongoose');
 const Roadmap = require('../models/Roadmap');
 const Profile = require('../models/Profile');
-const { memoryRoadmaps } = require('./analysisController');
-const { memoryProfiles } = require('./profileController');
+const { getRoadmaps, getProfiles, saveState } = require('../services/storeService');
 
-const buildDefaultRoadmap = (userId, targetRole) => ({
-  _id: 'rm_default_' + userId,
-  user: userId,
-  targetRole: targetRole || 'Career Gap Recovery & Re-entry',
-  currentPhaseIndex: 0,
-  overallProgress: 25,
-  phases: [
+const buildDefaultRoadmap = (userId, targetRole) => {
+  const defaultPhases = [
     {
       phaseNumber: 1,
       title: 'Phase 1: Self-Assessment & Skill Audit',
@@ -43,55 +38,70 @@ const buildDefaultRoadmap = (userId, targetRole) => ({
         { _id: 'm9', title: 'Complete mock technical & behavioral returnee interview', completed: false, type: 'networking', resourceLink: '#' }
       ]
     }
-  ],
-  recommendedMentors: [
-    {
-      name: 'Sarah Lin',
-      role: 'Engineering Manager & Former Returnee',
-      company: 'Stripe',
-      bio: 'Returned to tech after 4-year break raising twin daughters. Passionate about mentoring women in STEM.',
-      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
-    },
-    {
-      name: 'Priya Sharma',
-      role: 'Director of Product',
-      company: 'Adobe',
-      bio: 'Re-entered workforce through returnship program. Champion for return-to-work flexibility.',
-      avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-    }
-  ]
-});
+  ];
+
+  return {
+    _id: 'rm_default_' + userId,
+    userId,
+    user: userId,
+    targetRole: targetRole || 'Career Gap Recovery & Re-entry',
+    currentPhaseIndex: 0,
+    progress: 25,
+    overallProgress: 25,
+    weeks: defaultPhases,
+    phases: defaultPhases,
+    recommendedMentors: [
+      {
+        name: 'Sarah Lin',
+        role: 'Engineering Manager & Former Returnee',
+        company: 'Stripe',
+        bio: 'Returned to tech after 4-year break raising twin daughters. Passionate about mentoring women in STEM.',
+        avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+      },
+      {
+        name: 'Priya Sharma',
+        role: 'Director of Product',
+        company: 'Adobe',
+        bio: 'Re-entered workforce through returnship program. Champion for return-to-work flexibility.',
+        avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
+      }
+    ]
+  };
+};
 
 const getRoadmap = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    try {
-      const roadmap = await Roadmap.findOne({ user: userId });
-      if (roadmap) {
-        return res.json({ success: true, roadmap });
+    // 1. Try Primary MongoDB
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const roadmap = await Roadmap.findOne({ $or: [{ userId }, { user: userId }] });
+        if (roadmap) {
+          return res.json({ success: true, roadmap });
+        }
+      } catch (dbErr) {
+        console.warn('[GetRoadmap] MongoDB query error:', dbErr.message);
       }
-    } catch (dbErr) {
-      // DB check failed
     }
 
-    if (memoryRoadmaps.has(String(userId))) {
-      return res.json({ success: true, roadmap: memoryRoadmaps.get(String(userId)) });
+    // 2. Check Persistent Local Store
+    const roadmaps = getRoadmaps();
+    const stored = roadmaps.find((r) => String(r.userId || r.user) === String(userId));
+    if (stored) {
+      return res.json({ success: true, roadmap: stored });
     }
 
-    // Default roadmap generator if none yet
-    let profile = null;
-    try {
-      profile = await Profile.findOne({ user: userId });
-    } catch (e) {
-      profile = memoryProfiles.get(String(userId));
-    }
+    // 3. Fallback: Build default roadmap based on user's target career
+    const profiles = getProfiles();
+    const userProfile = profiles.find((p) => String(p.userId || p.user) === String(userId));
+    const target = userProfile?.desiredCareer || 'Career Re-entry';
+    const fallbackRoadmap = buildDefaultRoadmap(userId, target);
 
-    const targetRole = profile ? profile.desiredCareer : 'Career Gap Recovery & Re-entry';
-    const defaultRoadmap = buildDefaultRoadmap(userId, targetRole);
-    memoryRoadmaps.set(String(userId), defaultRoadmap);
+    roadmaps.push(fallbackRoadmap);
+    saveState();
 
-    return res.json({ success: true, roadmap: defaultRoadmap });
+    return res.json({ success: true, roadmap: fallbackRoadmap });
   } catch (error) {
     console.error('Get roadmap error:', error);
     res.status(500).json({ success: false, message: error.message || 'Server error.' });
@@ -103,57 +113,76 @@ const updateMilestone = async (req, res) => {
     const userId = req.user.id;
     const { phaseIndex, milestoneIndex, completed } = req.body;
 
-    try {
-      const dbRoadmap = await Roadmap.findOne({ user: userId });
-      if (dbRoadmap) {
-        if (dbRoadmap.phases[phaseIndex] && dbRoadmap.phases[phaseIndex].milestones[milestoneIndex]) {
-          dbRoadmap.phases[phaseIndex].milestones[milestoneIndex].completed = completed;
-          
-          // recalculate overall progress
-          let total = 0;
-          let done = 0;
-          dbRoadmap.phases.forEach((p) => {
-            p.milestones.forEach((m) => {
-              total++;
-              if (m.completed) done++;
+    // 1. Try Primary MongoDB
+    if (mongoose.connection.readyState === 1 && mongoose.Types.ObjectId.isValid(userId)) {
+      try {
+        const roadmap = await Roadmap.findOne({ $or: [{ userId }, { user: userId }] });
+        if (roadmap) {
+          const phases = roadmap.phases || roadmap.weeks || [];
+          if (phases[phaseIndex]?.milestones?.[milestoneIndex]) {
+            phases[phaseIndex].milestones[milestoneIndex].completed = completed;
+
+            let total = 0;
+            let done = 0;
+            phases.forEach((p) => {
+              (p.milestones || []).forEach((m) => {
+                total++;
+                if (m.completed) done++;
+              });
             });
-          });
-          dbRoadmap.overallProgress = Math.round((done / Math.max(total, 1)) * 100);
-          await dbRoadmap.save();
-          return res.json({ success: true, roadmap: dbRoadmap });
+
+            const newProgress = total > 0 ? Math.round((done / total) * 100) : 0;
+            roadmap.progress = newProgress;
+            roadmap.overallProgress = newProgress;
+            roadmap.phases = phases;
+            roadmap.weeks = phases;
+            await roadmap.save();
+
+            return res.json({ success: true, message: 'Milestone updated', roadmap });
+          }
         }
+      } catch (dbErr) {
+        console.warn('[UpdateMilestone] MongoDB update error, checking store:', dbErr.message);
       }
-    } catch (e) {
-      // Memory fallback
     }
 
-    let roadmap = memoryRoadmaps.get(String(userId));
+    // 2. Persistent Local Store
+    const roadmaps = getRoadmaps();
+    let roadmap = roadmaps.find((r) => String(r.userId || r.user) === String(userId));
     if (!roadmap) {
-      let profile = memoryProfiles.get(String(userId));
-      const targetRole = profile ? profile.desiredCareer : 'Career Gap Recovery & Re-entry';
-      roadmap = buildDefaultRoadmap(userId, targetRole);
-      memoryRoadmaps.set(String(userId), roadmap);
+      roadmap = buildDefaultRoadmap(userId, 'Target Career');
+      roadmaps.push(roadmap);
     }
 
-    if (roadmap && roadmap.phases[phaseIndex] && roadmap.phases[phaseIndex].milestones[milestoneIndex]) {
-      roadmap.phases[phaseIndex].milestones[milestoneIndex].completed = completed;
+    const phases = roadmap.phases || roadmap.weeks || [];
+    if (phases[phaseIndex]?.milestones?.[milestoneIndex]) {
+      phases[phaseIndex].milestones[milestoneIndex].completed = completed;
+
       let total = 0;
       let done = 0;
-      roadmap.phases.forEach((p) => {
-        p.milestones.forEach((m) => {
+      phases.forEach((p) => {
+        (p.milestones || []).forEach((m) => {
           total++;
           if (m.completed) done++;
         });
       });
-      roadmap.overallProgress = Math.round((done / Math.max(total, 1)) * 100);
-      memoryRoadmaps.set(String(userId), roadmap);
-      return res.json({ success: true, roadmap });
+
+      const newProgress = total > 0 ? Math.round((done / total) * 100) : 0;
+      roadmap.progress = newProgress;
+      roadmap.overallProgress = newProgress;
+      saveState();
+
+      return res.json({ success: true, message: 'Milestone updated', roadmap });
     }
 
-    res.status(404).json({ success: false, message: 'Milestone not found.' });
+    return res.status(400).json({ success: false, message: 'Invalid phase or milestone index' });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error('Update milestone error:', error);
+    res.status(500).json({ success: false, message: error.message || 'Server error.' });
   }
 };
 
-module.exports = { getRoadmap, updateMilestone };
+module.exports = {
+  getRoadmap,
+  updateMilestone,
+};

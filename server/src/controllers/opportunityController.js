@@ -161,6 +161,8 @@ const sampleOpportunities = [
   }
 ];
 
+const { getOpportunities: getStoredOpportunities, saveState } = require('../services/storeService');
+
 const getOpportunities = async (req, res) => {
   try {
     const { type, search, workType } = req.query;
@@ -177,21 +179,39 @@ const getOpportunities = async (req, res) => {
       filter.$or = [
         { title: searchRegex },
         { company: searchRegex },
+        { organization: searchRegex },
         { description: searchRegex },
         { requiredSkills: searchRegex },
+        { skills: searchRegex },
       ];
     }
 
+    // 1. Try Primary MongoDB
     try {
       const opportunities = await Opportunity.find(filter).sort({ createdAt: -1 });
       if (opportunities.length > 0) {
         return res.json({ success: true, count: opportunities.length, opportunities });
       }
     } catch (dbErr) {
-      // Filter sampleOpportunities in memory
+      // MongoDB query failed, fall through to in-memory/disk store
     }
 
-    let results = sampleOpportunities;
+    // 2. Fallback to combined stored opportunities and sampleOpportunities
+    const storedOpps = getStoredOpportunities();
+    const combinedOpps = [...storedOpps, ...sampleOpportunities];
+
+    // Deduplicate by _id or title
+    const seen = new Set();
+    const uniqueOpps = [];
+    for (const opp of combinedOpps) {
+      const key = String(opp._id || opp.title);
+      if (!seen.has(key)) {
+        seen.add(key);
+        uniqueOpps.push(opp);
+      }
+    }
+
+    let results = uniqueOpps;
     if (type && type !== 'all') {
       results = results.filter((o) => o.type === type);
     }
@@ -202,10 +222,11 @@ const getOpportunities = async (req, res) => {
       const s = search.toLowerCase();
       results = results.filter(
         (o) =>
-          o.title.toLowerCase().includes(s) ||
-          o.company.toLowerCase().includes(s) ||
-          o.description.toLowerCase().includes(s) ||
-          o.requiredSkills.some((sk) => sk.toLowerCase().includes(s))
+          o.title?.toLowerCase().includes(s) ||
+          o.company?.toLowerCase().includes(s) ||
+          o.organization?.toLowerCase().includes(s) ||
+          o.description?.toLowerCase().includes(s) ||
+          (o.requiredSkills || o.skills || []).some((sk) => sk.toLowerCase().includes(s))
       );
     }
 
@@ -218,20 +239,75 @@ const getOpportunities = async (req, res) => {
 
 const createOpportunity = async (req, res) => {
   try {
-    try {
-      const opp = await Opportunity.create(req.body);
-      return res.status(201).json({ success: true, opportunity: opp });
-    } catch (dbErr) {
-      const newOpp = {
-        _id: 'opp_' + Date.now(),
-        ...req.body,
-        createdAt: new Date(),
-      };
-      sampleOpportunities.unshift(newOpp);
-      return res.status(201).json({ success: true, opportunity: newOpp });
+    const { title, company, organization, type, description, skills, requiredSkills, location, workType, experience, experienceLevel, url, URL } = req.body;
+
+    const orgName = organization || company;
+    if (!title || !orgName || !type || !description) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required opportunity fields: title, organization/company, type, and description are required.',
+      });
     }
+
+    const validTypes = ['course', 'internship', 'job'];
+    if (!validTypes.includes(type)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid opportunity type. Must be one of: ${validTypes.join(', ')}`,
+      });
+    }
+
+    const rawSkills = skills || requiredSkills || [];
+    const formattedSkills = Array.isArray(rawSkills)
+      ? rawSkills
+      : typeof rawSkills === 'string'
+      ? rawSkills.split(',').map((s) => s.trim()).filter(Boolean)
+      : [];
+
+    const oppData = {
+      title,
+      organization: orgName,
+      company: orgName,
+      type,
+      description,
+      skills: formattedSkills,
+      requiredSkills: formattedSkills,
+      location: location || 'Remote',
+      workType: workType || 'Remote',
+      experience: experience || experienceLevel || 'Intermediate',
+      experienceLevel: experience || experienceLevel || 'Intermediate',
+      URL: URL || url || '#',
+      url: URL || url || '#',
+      createdAt: new Date().toISOString(),
+    };
+
+    let createdOpp = null;
+
+    // 1. Try Primary MongoDB
+    try {
+      createdOpp = await Opportunity.create(oppData);
+    } catch (dbErr) {
+      console.warn('[CreateOpportunity] MongoDB insert error:', dbErr.message);
+    }
+
+    // 2. Always persist into local disk store
+    const storedOpps = getStoredOpportunities();
+    const fallbackId = 'opp_' + Date.now();
+    const finalOpp = {
+      _id: createdOpp?._id ? String(createdOpp._id) : fallbackId,
+      ...oppData,
+    };
+    storedOpps.unshift(finalOpp);
+    saveState();
+
+    return res.status(201).json({
+      success: true,
+      message: 'Opportunity successfully created',
+      opportunity: createdOpp || finalOpp,
+    });
   } catch (err) {
-    res.status(400).json({ success: false, message: err.message });
+    console.error('Create opportunity error:', err);
+    res.status(500).json({ success: false, message: err.message || 'Server error creating opportunity.' });
   }
 };
 

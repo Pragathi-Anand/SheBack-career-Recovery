@@ -1,30 +1,38 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const User = require('../models/User');
-
-// In-memory fallback if MongoDB is disconnected
-const memoryUsers = new Map();
+const { getUsers, saveState } = require('../services/storeService');
 
 const DEMO_USER_ID = 'demo_user_sheback_2026';
 const DEMO_EMAIL = 'demo@sheback.com';
 const DEMO_PASSWORD_HASH = bcrypt.hashSync('password123', 10);
 
-// Pre-seed demo account
-memoryUsers.set(DEMO_EMAIL, {
-  _id: DEMO_USER_ID,
-  name: 'Priya Sharma',
-  email: DEMO_EMAIL,
-  password: DEMO_PASSWORD_HASH,
-  onboarded: true,
-});
+// Initialize persistent user list
+const initStoreUsers = () => {
+  const users = getUsers();
+  const exists = users.find((u) => u.email === DEMO_EMAIL);
+  if (!exists) {
+    users.push({
+      _id: DEMO_USER_ID,
+      id: DEMO_USER_ID,
+      name: 'Priya Sharma',
+      email: DEMO_EMAIL,
+      password: DEMO_PASSWORD_HASH,
+      onboarded: true,
+      createdAt: new Date().toISOString(),
+    });
+    saveState();
+  }
+};
+initStoreUsers();
 
 const setMemoryUserOnboarded = (userId, onboarded = true) => {
-  for (const [email, u] of memoryUsers.entries()) {
-    if (String(u._id) === String(userId)) {
-      u.onboarded = onboarded;
-      memoryUsers.set(email, u);
-      break;
-    }
+  const users = getUsers();
+  const u = users.find((user) => String(user._id || user.id) === String(userId));
+  if (u) {
+    u.onboarded = onboarded;
+    saveState();
   }
 };
 
@@ -44,69 +52,94 @@ const register = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Please provide all required fields.' });
     }
 
-    // Try MongoDB
-    try {
-      const existingUser = await User.findOne({ email: email.toLowerCase() });
-      if (existingUser) {
-        return res.status(400).json({ success: false, message: 'Email already registered.' });
-      }
+    const normalizedEmail = email.toLowerCase().trim();
 
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
+    // 1. Try Primary MongoDB first
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const existingUser = await User.findOne({ email: normalizedEmail });
+        if (existingUser) {
+          return res.status(400).json({ success: false, message: 'Email already registered.' });
+        }
 
-      const user = await User.create({
-        name,
-        email: email.toLowerCase(),
-        password: hashedPassword,
-        onboarded: false,
-      });
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-      const token = generateToken(user._id, user.email, user.name);
+        const user = await User.create({
+          name,
+          email: normalizedEmail,
+          password: hashedPassword,
+          onboarded: false,
+        });
 
-      return res.status(201).json({
-        success: true,
-        message: 'Registration successful',
-        token,
-        user: {
-          id: user._id,
+        // Also back up to local persistent store
+        const users = getUsers();
+        users.push({
+          _id: String(user._id),
+          id: String(user._id),
           name: user.name,
           email: user.email,
+          password: user.password,
           onboarded: user.onboarded,
-        },
-      });
-    } catch (dbErr) {
-      // In-memory fallback
-      if (memoryUsers.has(email.toLowerCase())) {
-        return res.status(400).json({ success: false, message: 'Email already registered.' });
+          createdAt: user.createdAt,
+        });
+        saveState();
+
+        const token = generateToken(user._id, user.email, user.name);
+
+        return res.status(201).json({
+          success: true,
+          message: 'Registration successful (MongoDB)',
+          token,
+          user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            onboarded: user.onboarded,
+          },
+        });
+      } catch (dbErr) {
+        console.warn('[Register] MongoDB operation failed, falling back to persistent store:', dbErr.message);
       }
-
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-      const userId = 'mem_' + Date.now();
-
-      const memoryUser = {
-        _id: userId,
-        name,
-        email: email.toLowerCase(),
-        password: hashedPassword,
-        onboarded: false,
-      };
-
-      memoryUsers.set(email.toLowerCase(), memoryUser);
-      const token = generateToken(userId, memoryUser.email, memoryUser.name);
-
-      return res.status(201).json({
-        success: true,
-        message: 'Registration successful (In-Memory)',
-        token,
-        user: {
-          id: userId,
-          name: memoryUser.name,
-          email: memoryUser.email,
-          onboarded: memoryUser.onboarded,
-        },
-      });
     }
+
+    // 2. Persistent Local Store Fallback
+    const users = getUsers();
+    const existing = users.find((u) => u.email === normalizedEmail);
+    if (existing) {
+      return res.status(400).json({ success: false, message: 'Email already registered.' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const newUserId = new mongoose.Types.ObjectId().toString();
+
+    const newUser = {
+      _id: newUserId,
+      id: newUserId,
+      name,
+      email: normalizedEmail,
+      password: hashedPassword,
+      onboarded: false,
+      createdAt: new Date().toISOString(),
+    };
+
+    users.push(newUser);
+    saveState();
+
+    const token = generateToken(newUserId, newUser.email, newUser.name);
+
+    return res.status(201).json({
+      success: true,
+      message: 'Registration successful (Persistent Storage)',
+      token,
+      user: {
+        id: newUserId,
+        name: newUser.name,
+        email: newUser.email,
+        onboarded: newUser.onboarded,
+      },
+    });
   } catch (error) {
     console.error('Register error:', error);
     res.status(500).json({ success: false, message: error.message || 'Server error during registration.' });
@@ -121,39 +154,48 @@ const login = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Please provide email and password.' });
     }
 
+    const normalizedEmail = email.toLowerCase().trim();
     let user = null;
     let isMatch = false;
 
-    try {
-      user = await User.findOne({ email: email.toLowerCase() });
-      if (user) {
-        isMatch = await bcrypt.compare(password, user.password);
-      }
-    } catch (dbErr) {
-      const memUser = memoryUsers.get(email.toLowerCase());
-      if (memUser) {
-        user = memUser;
-        isMatch = await bcrypt.compare(password, memUser.password);
+    // 1. Try Primary MongoDB
+    if (mongoose.connection.readyState === 1) {
+      try {
+        user = await User.findOne({ email: normalizedEmail });
+        if (user) {
+          isMatch = await bcrypt.compare(password, user.password);
+        }
+      } catch (dbErr) {
+        console.warn('[Login] MongoDB lookup error:', dbErr.message);
       }
     }
 
-    if (!user && memoryUsers.has(email.toLowerCase())) {
-      user = memoryUsers.get(email.toLowerCase());
-      isMatch = await bcrypt.compare(password, user.password);
+    // 2. Fallback to Persistent Local Store
+    if (!user || !isMatch) {
+      const users = getUsers();
+      const storeUser = users.find((u) => u.email === normalizedEmail);
+      if (storeUser) {
+        const matchesStore = await bcrypt.compare(password, storeUser.password);
+        if (matchesStore) {
+          user = storeUser;
+          isMatch = true;
+        }
+      }
     }
 
     if (!user || !isMatch) {
       return res.status(401).json({ success: false, message: 'Invalid credentials.' });
     }
 
-    const token = generateToken(user._id || user.id, user.email, user.name);
+    const userId = user._id || user.id;
+    const token = generateToken(userId, user.email, user.name);
 
-    res.json({
+    return res.json({
       success: true,
       message: 'Login successful',
       token,
       user: {
-        id: user._id || user.id,
+        id: userId,
         name: user.name,
         email: user.email,
         onboarded: user.onboarded || false,
@@ -165,4 +207,9 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login, memoryUsers, DEMO_USER_ID, setMemoryUserOnboarded };
+module.exports = {
+  register,
+  login,
+  DEMO_USER_ID,
+  setMemoryUserOnboarded,
+};

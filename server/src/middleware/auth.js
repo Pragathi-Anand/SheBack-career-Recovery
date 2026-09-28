@@ -9,7 +9,14 @@ const authMiddleware = (req, res, next) => {
   const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'sheback_super_secret_jwt_key_2026_career_gap_recovery');
-    req.user = decoded;
+    const normalizedId = decoded.id || decoded._id || decoded.userId;
+
+    req.user = {
+      ...decoded,
+      id: normalizedId,
+      _id: normalizedId,
+      userId: normalizedId,
+    };
     next();
   } catch (err) {
     return res.status(401).json({ success: false, message: 'Invalid or expired authentication token.' });

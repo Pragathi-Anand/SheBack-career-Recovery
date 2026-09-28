@@ -1,17 +1,33 @@
 const mongoose = require('mongoose');
 
+let isConnected = false;
+
 const connectDB = async () => {
+  const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
+
+  if (!mongoUri) {
+    console.warn('[MongoDB] No MONGO_URI environment variable configured.');
+    return false;
+  }
+
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sheback', {
-      serverSelectionTimeoutMS: 4000,
+    const conn = await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 5000,
     });
-    console.log(`[MongoDB] Connected successfully: ${conn.connection.host}`);
+    isConnected = true;
+    console.log(`[MongoDB] Connected successfully to host: ${conn.connection.host}, database: ${conn.connection.name}`);
     return true;
   } catch (error) {
-    console.warn(`[MongoDB] Local connection failed: ${error.message}`);
-    console.warn(`[MongoDB] Running with in-memory fallback store for API operations.`);
+    isConnected = false;
+    console.warn(`[MongoDB] Primary connection failed (${mongoUri}): ${error.message}`);
+    console.warn(`[MongoDB] Running with persistent fallback store for local development.`);
     return false;
   }
 };
+
+const getIsConnected = () => isConnected && mongoose.connection.readyState === 1;
+
+connectDB.getIsConnected = getIsConnected;
+connectDB.connectDB = connectDB;
 
 module.exports = connectDB;
