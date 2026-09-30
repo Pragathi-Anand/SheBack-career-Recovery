@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
+// In production (Vercel), VITE_API_URL is set to the public Render backend URL.
+// In local dev, it is empty so the Vite proxy handles /api/* requests.
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || '';
+
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
